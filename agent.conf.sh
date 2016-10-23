@@ -17,4 +17,4 @@ OBSERVIUM_HOST="192.168.1.125"
 # postfix_mailgraph postfix_qshape postgresql.conf postgresql.pl powerdns powerdns-recursor
 # raspberrypi README rpm sabnzbd-qstatus shoutcast shoutcast.conf shoutcast.default.conf
 # temperature unbound varnish vmwaretools zimbra
-MODULES=(apache)
+MODULES=(apache mysql)
