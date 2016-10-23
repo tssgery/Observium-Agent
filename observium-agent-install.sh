@@ -74,9 +74,13 @@ if [ "$ENTERPRISE" = true ]; then
         echo "Installing Enterprise Agent..."
 	echo
 else
-        echo "Installing Community Agent..."
-	echo
+   echo "Installing Community Agent..."
+   echo
+   if [ "$PKG_MAN" == "apt-get" ]; then
+        $PKG_MAN install snmpd xinetd
+   else
         $PKG_MAN install net-snmp xinetd
+   fi
 fi
 
 
@@ -138,7 +142,7 @@ else
         done
 fi
 
-if [ -x /etc/init.d/xinitd ]; then 
+if [ -x /etc/init.d/xinetd ]; then 
   /etc/init.d/xinetd restart
 else
   systemctl enable xinetd
