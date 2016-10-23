@@ -6,7 +6,7 @@ SYSLOCATION="Unknown"
 SVN_USER=""
 SVN_PASS=""
 
-OBSERVIUM_HOST="plex.internal.aceshome.com"
+OBSERVIUM_HOST="192.168.1.125"
 
 # Fill with a list of modules you would like to use from /opt/observium/scripts/agent-local
 # at the time of writing available options are: 
