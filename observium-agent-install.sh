@@ -51,18 +51,9 @@ if [ -z "$OBSERVIUM_HOST" ]; then
 fi
 
 if [ -z "$SVN_USER" ] || [ -z "$SVN_PASS" ]; then
-        $ENTERPRISE = false
+        ENTERPRISE=false
 fi
 
-if [ "$ENTERPRISE" = true ]; then
-        echo "Installing Enterprise Agent..."
-		echo
-        $PKG_MAN install subversion snmpd xinetd
-else
-        echo "Installing Community Agent..."
-		echo
-        $PKG_MAN install snmpd xinetd
-fi
 
 cd /opt
 
@@ -75,6 +66,20 @@ else
         tar zxvf observium-community-latest.tar.gz
 fi
 
+mv /opt/observium/scripts/distro /usr/bin/distro
+chmod 755 /usr/bin/distro
+
+
+if [ "$ENTERPRISE" = true ]; then
+        echo "Installing Enterprise Agent..."
+	echo
+else
+        echo "Installing Community Agent..."
+	echo
+        $PKG_MAN install net-snmp xinetd
+fi
+
+
 if [ -f "/etc/defaults/snmpd" ]; then
 	sed -e "/SNMPDOPTS=/ s/^#*/SNMPDOPTS='-Lsd -Lf \/dev\/null -u snmp -p \/var\/run\/snmpd.pid'\n#/" -i /etc/default/snmpd
 fi
@@ -83,8 +88,9 @@ if [ -f "/etc/sysconfig/snmpd.options" ]; then
 	sed -e "/SNMPDOPTS=/ s/^#*/SNMPDOPTS='-Lsd -Lf \/dev\/null -u snmp -p \/var\/run\/snmpd.pid'\n#/" -i /etc/sysconfig/snmpd.options
 fi
 
-mv /opt/observium/scripts/distro /usr/bin/distro
-chmod 755 /usr/bin/distro
+if [ -f "/etc/sysconfig/snmpd" ]; then
+	sed -e "/SNMPDOPTS=/ s/^#*/SNMPDOPTS='-Lsd -Lf \/dev\/null -u snmp -p \/var\/run\/snmpd.pid'\n#/" -i /etc/sysconfig/snmpd
+fi
 
 mv /etc/snmp/snmpd.conf /etc/snmp/snmpd.conf.bak
 cat >/etc/snmp/snmpd.conf <<EOL
@@ -132,5 +138,17 @@ else
         done
 fi
 
-/etc/init.d/xinetd restart
-/etc/init.d/snmpd restart
+if [ -x /etc/init.d/xinitd ]; then 
+  /etc/init.d/xinetd restart
+else
+  systemctl enable xinetd
+  systemctl start xinetd
+fi
+if [ -x /etc/init.d/snmpd ]; then 
+  /etc/init.d/snmpd restart
+else
+  systemctl disable firewalld
+  systemctl stop firewalld
+  systemctl enable snmpd 
+  systemctl start snmpd
+fi

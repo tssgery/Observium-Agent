@@ -1,12 +1,12 @@
 #!/bin/bash
-SNMP_COMMUNITY=""
-SYSCONTACT=""
-SYSLOCATION=""
+SNMP_COMMUNITY="public"
+SYSCONTACT="Eric"
+SYSLOCATION="Unknown"
 
 SVN_USER=""
 SVN_PASS=""
 
-OBSERVIUM_HOST=""
+OBSERVIUM_HOST="plex.internal.aceshome.com"
 
 # Fill with a list of modules you would like to use from /opt/observium/scripts/agent-local
 # at the time of writing available options are: 
@@ -17,4 +17,4 @@ OBSERVIUM_HOST=""
 # postfix_mailgraph postfix_qshape postgresql.conf postgresql.pl powerdns powerdns-recursor
 # raspberrypi README rpm sabnzbd-qstatus shoutcast shoutcast.conf shoutcast.default.conf
 # temperature unbound varnish vmwaretools zimbra
-MODULES=()
+MODULES=(apache)
